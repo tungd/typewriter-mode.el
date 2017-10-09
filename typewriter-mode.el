@@ -25,22 +25,32 @@
 ;;; Code:
 
 (defcustom twm/sound-file
-  (format "%stypewriter-key-modern.wav"
-          (file-name-directory load-file-name))
-  "Path to sound file."
+  "typewriter-key-modern.wav"
+  "Sound file."
   :group 'typewriter-mode)
 
 (defcustom twm/play-command
   (case system-type
-    ('darwin "play %s")
+    ('darwin "afplay %s")
     ('gnu/linux "aplay %s"))
   "Command to play sound file."
   :group 'typewriter-mode)
 
+(defconst twm/sound-file-dir
+ (file-name-directory load-file-name)
+  "The directory of sound files.")
+
 (defun twm/play-typewriter-sound ()
   (start-process-shell-command
    "*play-typewriter-sound*" nil
-   (format twm/play-command twm/sound-file)))
+   (format twm/play-command (concat twm/sound-file-dir twm/sound-file))))
+
+(defun twm/toggle-sound-style ()
+  "Change typewriter sound between vintage and modern."
+  (interactive)
+  (let* ((is-vintage (string-match-p "vintage.wav" twm/sound-file)))
+    (setq twm/sound-file (format "typewriter-key-%s.wav"
+                                 (if is-vintage "modern" "vintage")))))
 
 ;;;###autoload
 (defun turn-on-typewriter-mode ()
