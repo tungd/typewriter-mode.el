@@ -30,7 +30,7 @@
   :group 'typewriter-mode)
 
 (defcustom twm/play-command
-  (case system-type
+  (pcase system-type
     ('darwin "afplay %s")
     ('gnu/linux "aplay %s"))
   "Command to play sound file."
